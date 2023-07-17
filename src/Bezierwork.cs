@@ -7,7 +7,6 @@ namespace Elements
 {
     public class Bezierwork : GeometricElement
     {
-
         public Bezier Bezier { get; set; }
         [JsonProperty("Add Id")]
         public string AddId { get; set; }
@@ -20,10 +19,10 @@ namespace Elements
             SetMaterial();
         }
 
-        public Bezierwork(Bezier bezier)
+        public Bezierwork(string id, Bezier bezier)
         {
-            Bezier = bezier;
-            this.AddId = this.Id.ToString();
+            this.Bezier = bezier;
+            this.AddId = id;
             SetMaterial();
         }
 
@@ -59,16 +58,11 @@ namespace Elements
             var innerPointRadius = 0.05;
 
             // Create an sweep along the curve with a circular profile
-            var circle = new Circle(circleRadius).ToPolygon();
+            var circle = new Elements.Geometry.Circle(Vector3.Origin, circleRadius).ToPolygon(10);
 
-            try
-            {
-                // Create an extruded circle along the line segment
-                var sweep = new Sweep(circle, Bezier, 0, 0, 0, false);
+            var sweep = new Sweep(circle, Bezier, 0, 0, 0, false);
 
-                rep.SolidOperations.Add(sweep);
-            }
-            catch { }
+            rep.SolidOperations.Add(sweep);
 
             // Add a spherical point at each vertex of the polyline
             for (int i = 0; i < Bezier.ControlPoints.Count; i++)
@@ -89,19 +83,8 @@ namespace Elements
 
                 foreach (var triangle in sphere.Triangles)
                 {
-                    var vertices = new List<Vector3>();
-
-                    foreach (var tvertex in triangle.Vertices)
-                    {
-                        // Convert Vector3D to Vector3
-                        var vector3 = new Vector3(tvertex.Position.X, tvertex.Position.Y, tvertex.Position.Z);
-                        vertices.Add(vector3);
-                    }
-
-                    // Create a Polygon from the triangle's vertices
-                    var polygon = new Polygon(vertices);
-
-                    // polygons.Add(polygon);
+                    // Create a Polygon from the triangle's vertices point
+                    var polygon = new Polygon(triangle.Vertices.SelectMany(v => new List<Vector3> { v.Position }).ToList());
                     solidRep.AddFace(polygon);
                 }
             }

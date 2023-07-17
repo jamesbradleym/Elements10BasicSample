@@ -7,7 +7,6 @@ namespace Elements
 {
     public class Polylinework : GeometricElement
     {
-
         public Polyline Polyline { get; set; }
         [JsonProperty("Add Id")]
         public string AddId { get; set; }
@@ -21,13 +20,15 @@ namespace Elements
             this.ShowPoints = showpoints;
             SetMaterial();
         }
-        public Polylinework(Polyline polyline, bool showpoints = true)
-        {
-            Polyline = polyline;
 
+        public Polylinework(string id, Polyline polyline, bool showpoints = true)
+        {
+            this.Polyline = polyline;
+            this.AddId = id;
             this.ShowPoints = showpoints;
             SetMaterial();
         }
+
         public bool Match(PolylinesIdentity identity)
         {
             return identity.AddId == this.AddId;
@@ -66,7 +67,7 @@ namespace Elements
                 var direction = Polyline.Segments()[i].Direction();
                 var length = Polyline.Segments()[i].Length();
 
-                var circle = Polygon.Circle(circleRadius, 10);
+                var circle = new Elements.Geometry.Circle(Vector3.Origin, circleRadius).ToPolygon(10);
                 circle.Transform(new Transform(new Plane(start, direction)));
 
                 // Create an extruded circle along the line segment
@@ -82,7 +83,6 @@ namespace Elements
                 {
                     var sphere = Mesh.Sphere(pointRadius, 10);
 
-
                     HashSet<Geometry.Vertex> modifiedVertices = new HashSet<Geometry.Vertex>();
                     // Translate the vertices of the mesh to center it at the origin
                     foreach (var svertex in sphere.Vertices)
@@ -94,22 +94,10 @@ namespace Elements
                         }
                     }
 
-                    // List<Polygon> polygons = new List<Polygon>();
-
                     foreach (var triangle in sphere.Triangles)
                     {
-                        var vertices = new List<Vector3>();
-
-                        foreach (var tvertex in triangle.Vertices)
-                        {
-                            // Convert Vector3D to Vector3
-                            var vector3 = new Vector3(tvertex.Position.X, tvertex.Position.Y, tvertex.Position.Z);
-                            vertices.Add(vector3);
-                        }
-
-                        // Create a Polygon from the triangle's vertices
-                        var polygon = new Polygon(vertices);
-
+                        // Create a Polygon from the triangle's vertices point
+                        var polygon = new Polygon(triangle.Vertices.SelectMany(v => new List<Vector3> { v.Position }).ToList());
                         solidRep.AddFace(polygon);
                     }
                 }

@@ -53,13 +53,13 @@ namespace Elements10BasicSample
             /// CIRCLE
             // Create a circle
             var circle = new Circle(new Vector3(5, 5, 0), 4);
-            var circlework = new Circlework(circle);
+            var circlework = new Circlework("Circle Example", circle);
             output.Model.AddElement(circlework);
 
             /// ARC
             // Create an arc
             var arc = new Arc(new Vector3(15, 5, 0), 4, 0.0, 270.0);
-            var arcwork = new Arcwork(arc);
+            var arcwork = new Arcwork("Arc Example", arc);
             output.Model.AddElement(arcwork);
 
             /// ELLIPSE
@@ -76,14 +76,14 @@ namespace Elements10BasicSample
                     new Vector3(39, 5.01, 0),
                 }
             );
-            var bezierwork = new Bezierwork(bezier);
+            var bezierwork = new Bezierwork("Bezier Example", bezier);
             output.Model.AddElement(bezierwork);
             bezierworks.Add(bezierwork);
 
             /// LINE
             // Create a line
             var line = new Line(new Vector3(45, 1, 0), new Vector3(45, 9, 0));
-            var linework = new Linework(line);
+            var linework = new Linework("Line Example", line);
             lineworks.Add(linework);
             output.Model.AddElement(linework);
 
@@ -105,7 +105,7 @@ namespace Elements10BasicSample
                     new Vector3(59, 9, 0),
                 }
             );
-            var polylinework = new Polylinework(polyline);
+            var polylinework = new Polylinework("Polyline Example", polyline);
             polylineworks.Add(polylinework);
             output.Model.AddElement(polylinework);
 
