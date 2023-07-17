@@ -64,7 +64,6 @@ namespace Elements10BasicSample
               (bezierwork, edit) => bezierwork.Update(edit)
             );
 
-
             output.Model.AddElements(bezierworks);
 
             /// LINE

@@ -7,22 +7,26 @@ namespace Elements
 {
     public class Bezierwork : GeometricElement
     {
+
         public Bezier Bezier { get; set; }
+        public Polyline Polyline { get; set; }
         [JsonProperty("Add Id")]
         public string AddId { get; set; }
 
         public Bezierwork(BeziersOverrideAddition add)
         {
+            this.Polyline = add.Value.Polyline;
             this.Bezier = new Bezier(add.Value.Polyline.Vertices.ToList());
             this.AddId = add.Id;
 
             SetMaterial();
         }
 
-        public Bezierwork(string id, Bezier bezier)
+        public Bezierwork(Bezier bezier, Polyline bezierPolyline)
         {
+            this.Polyline = bezierPolyline;
             this.Bezier = bezier;
-            this.AddId = id;
+            this.AddId = this.Id.ToString();
             SetMaterial();
         }
 
@@ -33,6 +37,7 @@ namespace Elements
 
         public Bezierwork Update(BeziersOverride edit)
         {
+            this.Polyline = edit.Value.Polyline;
             this.Bezier = new Bezier(edit.Value.Polyline.Vertices.ToList());
             return this;
         }
